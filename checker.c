@@ -18,7 +18,7 @@ int check_soc(float soc){
 }
 
 int check_chargeRate(float chargeRate){
-     if(chargeRate > 0.8) {
+    if(chargeRate > 0.8) {
     printf("Charge Rate out of range!\n");
     return 0;
   }
