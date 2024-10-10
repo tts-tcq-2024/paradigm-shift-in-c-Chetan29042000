@@ -6,47 +6,45 @@ int enable_temp_warning = 1;
 int enable_soc_warning = 1;
 int enable_charge_rate_warning = 1;
 
-int check_temperature(float temperature){
-    if(temperature < 0 || temperature > TEMP_UPPER_LIMIT) {
-        printf("Temperature out of range!\n");
+int is_within_range(float value, float lower, float upper, const char* error_message) {
+    if (value < lower || value > upper) {
+        printf("%s out of range!\n", error_message);
         return 0;
-    } 
-    if (enable_temp_warning) {
-        if (temperature >= TEMP_UPPER_LIMIT - TEMP_WARNING_TOLERANCE && temperature <= TEMP_UPPER_LIMIT) {
-            printf("Warning: Approaching temperature peak!\n");
-        }
     }
-    return 1;  
+    return 1;
 }
 
-int check_soc(float soc){
-    if(soc < 20 || soc > SOC_UPPER_LIMIT) {
-        printf("State of Charge out of range!\n");
-        return 0;
-    } 
-    if (enable_soc_warning) {
-        if (soc >= 20 && soc <= 20 + SOC_WARNING_TOLERANCE) {
-            printf("Warning: Approaching discharge!\n");
-        } else if (soc >= SOC_UPPER_LIMIT - SOC_WARNING_TOLERANCE && soc <= SOC_UPPER_LIMIT) {
-            printf("Warning: Approaching charge-peak!\n");
-        }
+void check_warning(float value, float upper_limit, float tolerance, int enable_warning, const char* warning_message) {
+    if (enable_warning && value >= upper_limit - tolerance && value <= upper_limit) {
+        printf("Warning: %s\n", warning_message);
     }
-    return 1;  
 }
 
-int check_chargeRate(float chargeRate){
-    if(chargeRate > CHARGE_RATE_UPPER_LIMIT) {
-        printf("Charge Rate out of range!\n");
+int check_temperature(float temperature) {
+    if (!is_within_range(temperature, 0, TEMP_UPPER_LIMIT, "Temperature")) {
         return 0;
-    } 
-    if (enable_charge_rate_warning) {
-        if (chargeRate >= CHARGE_RATE_UPPER_LIMIT - CHARGE_RATE_WARNING_TOLERANCE && chargeRate <= CHARGE_RATE_UPPER_LIMIT) {
-            printf("Warning: Approaching charge rate peak!\n");
-        }
     }
-    return 1;  
+    check_warning(temperature, TEMP_UPPER_LIMIT, TEMP_WARNING_TOLERANCE, enable_temp_warning, "Approaching temperature peak!");
+    return 1;
+}
+
+int check_soc(float soc) {
+    if (!is_within_range(soc, 20, SOC_UPPER_LIMIT, "State of Charge")) {
+        return 0;
+    }
+    check_warning(soc, 20, SOC_WARNING_TOLERANCE, enable_soc_warning, "Approaching discharge!");
+    check_warning(soc, SOC_UPPER_LIMIT, SOC_WARNING_TOLERANCE, enable_soc_warning, "Approaching charge-peak!");
+    return 1;
+}
+
+int check_chargeRate(float chargeRate) {
+    if (!is_within_range(chargeRate, 0, CHARGE_RATE_UPPER_LIMIT, "Charge Rate")) {
+        return 0;
+    }
+    check_warning(chargeRate, CHARGE_RATE_UPPER_LIMIT, CHARGE_RATE_WARNING_TOLERANCE, enable_charge_rate_warning, "Approaching charge rate peak!");
+    return 1;
 }
 
 int batteryIsOk(float temperature, float soc, float chargeRate) {
-  return check_temperature(temperature) && check_soc(soc) && check_chargeRate(chargeRate);
+    return check_temperature(temperature) && check_soc(soc) && check_chargeRate(chargeRate);
 }
