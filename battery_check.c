@@ -15,7 +15,10 @@ int is_within_range(float value, float lower, float upper, const char* error_mes
 }
 
 void check_warning(float value, float upper_limit, float tolerance, int enable_warning, const char* warning_message) {
-    if (enable_warning && value >= upper_limit - tolerance && value <= upper_limit) {
+    if (!enable_warning) {
+        return;  // Early return if warnings are disabled
+    }
+    if (value >= upper_limit - tolerance && value <= upper_limit) {
         printf("Warning: %s\n", warning_message);
     }
 }
