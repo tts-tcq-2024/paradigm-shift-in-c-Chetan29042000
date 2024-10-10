@@ -9,7 +9,7 @@
 #define CHARGE_RATE_UPPER_LIMIT 0.8
 #define CHARGE_RATE_WARNING_TOLERANCE (CHARGE_RATE_UPPER_LIMIT * 0.05)
 
-// Flags for enabling/disabling warnings for specific parameters
+// Flags for enabling or disabling warnings for specific parameters
 extern int enable_temp_warning;
 extern int enable_soc_warning;
 extern int enable_charge_rate_warning;
