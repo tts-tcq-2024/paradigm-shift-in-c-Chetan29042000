@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "battery_check.h"
 
-// Initializing flags for enabling/disabling warnings
+// Initializing flags for enabling or disabling warnings
 int enable_temp_warning = 1;
 int enable_soc_warning = 1;
 int enable_charge_rate_warning = 1;
