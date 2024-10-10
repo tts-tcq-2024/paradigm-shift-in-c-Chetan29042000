@@ -15,11 +15,12 @@ int is_within_range(float value, float lower, float upper, const char* error_mes
 }
 
 void check_warning(float value, float upper_limit, float tolerance, int enable_warning, const char* warning_message) {
-    if (enable_warning && value >= upper_limit - tolerance && value <= upper_limit) {
-        printf("Warning: %s\n", warning_message);
-    }
+    // Calculate if warning condition is met as a boolean-like (1 or 0) value
+    int should_warn = enable_warning * (value >= upper_limit - tolerance) * (value <= upper_limit);
+    
+    // Use multiplication to ensure printf only gets called when should_warn is 1
+    should_warn && printf("Warning: %s\n", warning_message);
 }
-
 int check_temperature(float temperature) {
     if (!is_within_range(temperature, 0, TEMP_UPPER_LIMIT, "Temperature")) {
         return 0;
