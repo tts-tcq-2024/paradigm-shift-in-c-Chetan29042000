@@ -48,7 +48,3 @@ int check_chargeRate(float chargeRate) {
 int batteryIsOk(float temperature, float soc, float chargeRate) {
     return check_temperature(temperature) && check_soc(soc) && check_chargeRate(chargeRate);
 }
-
-int batteryIsOk(float temperature, float soc, float chargeRate) {
-  return check_temperature(temperature) && check_soc(soc) && check_chargeRate(chargeRate);
-}
